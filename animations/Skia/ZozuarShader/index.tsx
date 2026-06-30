@@ -46,7 +46,7 @@ half4 main(vec2 FC) {
 }
 `)!;
 
-export default function CosmicShader() {
+export default function ZozuarShader() {
   const { width, height } = useWindowDimensions();
 
   const clock = useClock();

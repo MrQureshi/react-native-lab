@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Scene } from './components/Scene';
 
-export const LiquidShape = () => {
+const LiquidShape = () => {
   const filter = (baseShader: SkShader) => {
     'worklet';
 
@@ -28,3 +28,5 @@ export const LiquidShape = () => {
   };
   return <Scene filter={filter} />;
 };
+
+export default LiquidShape;

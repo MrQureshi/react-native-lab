@@ -17,12 +17,8 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import SDF from './animations/Skia/SDF/index.tsx';
-import StarNest from './animations/Skia/StarNest/index.tsx';
-import CosmicShader from './animations/Skia/ZozuarShader/index.tsx';
-import Carousel from './animations/Reanimated/AppleInvites/index.tsx';
-import { LiquidShape } from './animations/Skia/LiquidGlass/index.tsx';
-import ZozuarShader from './animations/Skia/ZozuarShader/index.tsx';
+import { AppleInvites, OnboardingPagination } from './animations/Reanimated';
+import { LiquidShape, SDF, StarNest, ZozuarShader } from './animations/Skia';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -31,13 +27,12 @@ function App() {
     <GestureHandlerRootView>
       <SafeAreaProvider>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-
-        {/* <Carousel /> */}
+        <OnboardingPagination />
+        {/* <AppleInvites /> */}
         {/* <SDF /> */}
         {/* <StarNest /> */}
         {/* <ZozuarShader /> */}
-        {/* <CosmicShader /> */}
-        <LiquidShape />
+        {/* <LiquidShape /> */}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
