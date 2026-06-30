@@ -1,17 +1,13 @@
-import { useState } from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import OnboardingPagination from './OnboardingPaginationIndicator ';
 
 const OnboardingScreen = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
+    <View>
       <OnboardingPagination
-        total={4}
+        total={selectedIndex}
         selectedIndex={selectedIndex}
         onIndexChange={index => setSelectedIndex(index)}
       />
