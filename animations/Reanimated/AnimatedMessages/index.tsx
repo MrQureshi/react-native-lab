@@ -27,6 +27,7 @@ const MessagesScreen = () => {
       setMessages(data => {
         return [generateMessages(), ...data];
       });
+      generateDate();
     }, timer);
   };
 
@@ -101,7 +102,6 @@ const MessagesScreen = () => {
       >
         <SegmentedControl
           values={Object.keys(messageSpeed ?? {})}
-          //   value={Object.keys(messageSpeed)}
           style={{ width: 300 }}
           selectedIndex={Object.keys(messageSpeed).indexOf(speed)}
           onChange={event => {

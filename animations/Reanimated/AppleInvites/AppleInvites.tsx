@@ -150,7 +150,7 @@ const AppleInvites = () => {
       <Stagger
         initialEnteringDelay={1000}
         duration={500}
-        key="akasdadakas"
+        key="stagger"
         stagger={500}
         style={{
           flex: 1,
