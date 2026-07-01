@@ -79,9 +79,4 @@ A new and optimized implementation has been developed under the **`TikTokLiveCom
 
 If you're looking for the recommended production-ready approach, please refer to the **`TikTokLiveComment`** folder for the latest implementation.
 
-- `useDerivedValue` works
-- `interpolate` maps animated values
-- `withSpring` creates spring animations
-- Per-item animations affect overall performance
-
 It demonstrates an important optimization lesson: **just because an animation works doesn't mean it's the most efficient approach**. Choosing the right animation strategy is often more important than adding more animations.
