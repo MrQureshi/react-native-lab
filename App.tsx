@@ -17,7 +17,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { AppleInvites, Onboarding } from './animations/Reanimated';
+import { AppleInvites, Messages, Onboarding } from './animations/Reanimated';
 import { LiquidShape, SDF, StarNest, ZozuarShader } from './animations/Skia';
 
 function App() {
@@ -27,7 +27,8 @@ function App() {
     <GestureHandlerRootView>
       <SafeAreaProvider>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <Onboarding />
+        <Messages />
+        {/* <Onboarding /> */}
         {/* <AppleInvites /> */}
         {/* <SDF /> */}
         {/* <StarNest /> */}
