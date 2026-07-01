@@ -3,6 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { generateMessages, MessageItem } from './MockMessages';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { Messages } from './Messages';
+import React from 'react';
 
 const messageSpeed = {
   slow: [1000, 500],
@@ -113,4 +114,4 @@ const MessagesScreen = () => {
   );
 };
 
-export default MessagesScreen;
+export default React.memo(MessagesScreen);
