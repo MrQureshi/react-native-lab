@@ -8,7 +8,7 @@ const messageSpeed = {
   slow: [1000, 500],
   medium: [500, 500],
   fast: [250, 250],
-  insane: [50, 100],
+  'Insane 🚀': [50, 100],
 };
 
 const MessagesScreen = () => {
