@@ -21,7 +21,7 @@ type messageProps<T> = FlatListProps<T> & {
   renderItem: ListRenderItem<T>;
 };
 
-function AnimatedItem({
+const AnimatedItem = React.memo(function AnimatedItem({
   index,
   children,
 }: {
@@ -51,7 +51,7 @@ function AnimatedItem({
       <Animated.View style={styleZ}>{children}</Animated.View>
     </Animated.View>
   );
-}
+});
 
 export function Messages<T>({ renderItem, ...rest }: messageProps<T>) {
   const { CellRendererComponent, ...flatListProps } = rest;
