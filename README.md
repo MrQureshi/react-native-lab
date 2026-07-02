@@ -28,7 +28,8 @@ Every experiment is designed to improve knowledge, code quality, and real-world 
 
 ---
 
-## If you find this repository helpful, consider giving it a
+## If you find this repository helpful, consider giving it a ⭐.
+
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
