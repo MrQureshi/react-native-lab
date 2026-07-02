@@ -1,5 +1,10 @@
 # 🚀 React Native Lab
 
+> A living React Native laboratory for exploring animations, performance, architecture, UI components, and modern mobile development. Continuously updated with new experiments, production-ready implementations, and the latest React Native techniques.
+
+---
+
+## 📖 About
 A collection of **React Native experiments, concepts, animations, and production-ready implementations** built while exploring the React Native ecosystem.
 
 This repository serves as my personal learning lab where I continuously explore **React Native**, **Reanimated**, **Skia**, performance optimization, UI/UX animations, architecture, and modern mobile development techniques.
