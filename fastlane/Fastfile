@@ -1,0 +1,38 @@
+platform :android do
+  desc "Clean Android project"
+  lane :clean do
+    gradle(
+      task: "clean",
+      project_dir: "android"
+    )
+  end
+
+  # desc "Run ESLint for TypeScript/JavaScript"
+  # lane :eslint do
+  #   sh("yarn lint")
+  # end
+
+  desc "Build Debug APK"
+  lane :build_debug do
+    gradle(
+      task: "assembleDebug",
+      project_dir: "android"
+    )
+  end
+
+  desc "Install Debug APK"
+  lane :install_debug do
+    gradle(
+      task: "installDebug",
+      project_dir: "android"
+    )
+  end
+
+  desc "Development workflow"
+  lane :dev do
+    clean
+    # eslint
+    build_debug
+    install_debug
+  end
+end

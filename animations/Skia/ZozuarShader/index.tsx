@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import {
   Canvas,
   Fill,
@@ -57,10 +57,14 @@ export default function ZozuarShader() {
   }));
 
   return (
-    <Canvas style={{ flex: 1 }}>
+    <Canvas style={style.container}>
       <Fill>
         <Shader source={effect} uniforms={uniforms} />
       </Fill>
     </Canvas>
   );
 }
+
+const style = StyleSheet.create({
+  container: { flex: 1 },
+});

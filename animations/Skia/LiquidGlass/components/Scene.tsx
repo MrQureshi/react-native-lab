@@ -20,7 +20,7 @@ import {
   useDerivedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import { frag, glsl } from './ShaderLib';
@@ -160,9 +160,9 @@ export const Scene = ({
     });
   });
   return (
-    <View style={{ flex: 1 }}>
+    <View style={style.container}>
       <GestureDetector gesture={gesture}>
-        <Canvas style={{ flex: 1 }} ref={ref}>
+        <Canvas style={style.container} ref={ref}>
           <Pattern />
           <BackdropFilter filter={<ImageFilter filter={filter} />} />
           <ButtonGroup {...props} />
@@ -171,3 +171,7 @@ export const Scene = ({
     </View>
   );
 };
+
+const style = StyleSheet.create({
+  container: { flex: 1 },
+});

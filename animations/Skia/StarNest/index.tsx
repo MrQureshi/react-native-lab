@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import {
   Canvas,
   Fill,
@@ -97,7 +97,7 @@ function StarNest() {
   }));
 
   return (
-    <Canvas style={{ flex: 1 }}>
+    <Canvas style={style.container}>
       <Fill>
         <Shader source={effect} uniforms={uniforms} />
       </Fill>
@@ -106,3 +106,7 @@ function StarNest() {
 }
 
 export default StarNest;
+
+const style = StyleSheet.create({
+  container: { flex: 1 },
+});

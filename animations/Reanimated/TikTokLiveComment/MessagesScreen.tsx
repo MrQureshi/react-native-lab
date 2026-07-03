@@ -7,7 +7,7 @@ import MessageList from './MessageList';
 import { SPEEDS } from './constants';
 import { Speed } from './types';
 import { useMessageEngine } from './useMessageEngine';
-import MessageMask from './MessageMask';
+// import MessageMask from './MessageMask';
 
 const MessagesScreen = () => {
   const { messages, speed, setSpeed } = useMessageEngine();
