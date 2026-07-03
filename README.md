@@ -33,7 +33,7 @@ Every experiment is designed to improve knowledge, code quality, and real-world 
 
 ---
 
-## ⭐ Support the Project
+## ⭐ Support the Repository
 
 If you found this project helpful or learned something new, please consider giving it a **⭐ Star** on GitHub. It helps others discover the repository and motivates continued development and sharing of new React Native experiments.
 
