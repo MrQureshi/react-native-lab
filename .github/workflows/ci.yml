@@ -19,3 +19,15 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
+
+      - name: Type Check
+        run: yarn tsc --noEmit
+
+      - name: ESLint
+        run: yarn lint
+
+      - name: Prettier
+        run: yarn prettier --check .
+
+      # - name: Run Tests
+      # run: yarn test
