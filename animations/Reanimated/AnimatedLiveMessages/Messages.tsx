@@ -1,12 +1,5 @@
-import { render } from '@testing-library/react-native';
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatListProps,
-  ListRenderItem,
-} from 'react-native';
+import { View, FlatListProps, ListRenderItem } from 'react-native';
 import Animated, {
   FadeInDown,
   interpolate,
@@ -21,7 +14,7 @@ type messageProps<T> = FlatListProps<T> & {
   renderItem: ListRenderItem<T>;
 };
 
-const AnimatedItem = React.memo(function AnimatedItem({
+const AnimatedItem = React.memo(function AnimatedItemComponent({
   index,
   children,
 }: {
@@ -54,6 +47,7 @@ const AnimatedItem = React.memo(function AnimatedItem({
 });
 
 export function Messages<T>({ renderItem, ...rest }: messageProps<T>) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { CellRendererComponent, ...flatListProps } = rest;
   return (
     <Animated.FlatList
@@ -70,10 +64,3 @@ export function Messages<T>({ renderItem, ...rest }: messageProps<T>) {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-});

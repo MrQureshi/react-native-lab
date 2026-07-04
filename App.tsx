@@ -5,17 +5,8 @@
  * @format
  */
 
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   AppleInvites,
@@ -23,6 +14,7 @@ import {
   Onboarding,
   TikTopComment,
 } from './animations/Reanimated';
+
 import { LiquidShape, SDF, StarNest, ZozuarShader } from './animations/Skia';
 
 function App() {

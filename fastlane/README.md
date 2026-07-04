@@ -1,80 +1,64 @@
-# Fastlane (Learning Journey)
+fastlane documentation
+----
 
-This project uses **Fastlane** to automate repetitive Android development tasks and to better understand how CI/CD pipelines are built behind the scenes.
+# Installation
 
-> **Goal:** Learn Fastlane from first principles by implementing each lane manually instead of relying on generated templates or copy-paste configurations.
+Make sure you have the latest version of the Xcode command line tools installed:
 
-## Current Progress
-
-### ✅ Environment Setup
-
-- Installed and configured **rbenv**
-- Installed **Ruby 3.4**
-- Configured **Bundler**
-- Installed **Fastlane** locally using Bundler
-- Created and configured a custom `Fastfile`
-
-## Implemented Android Lanes
-
-### `clean`
-
-Removes Android build artifacts by executing the Gradle `clean` task.
-
-```bash
-bundle exec fastlane android clean
+```sh
+xcode-select --install
 ```
 
----
+For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
 
-### `eslint`
+# Available Actions
 
-Runs the project's ESLint configuration through the existing Yarn script to validate TypeScript/JavaScript code quality.
+## Android
 
-```bash
-bundle exec fastlane android eslint
+### android clean
+
+```sh
+[bundle exec] fastlane android clean
 ```
 
----
+Clean Android project
 
-### `build_debug`
+### android eslint
 
-Builds a Debug APK using Gradle's `assembleDebug` task.
-
-```bash
-bundle exec fastlane android build_debug
+```sh
+[bundle exec] fastlane android eslint
 ```
 
-## Upcoming Lanes
+Run ESLint for TypeScript/JavaScript
 
-- `install_debug`
-- `dev` (Development workflow)
-- `build_release`
-- `beta`
-- `production`
+### android build_debug
 
-## Planned Development Workflow
-
-```text
-dev
- ├── clean
- ├── eslint
- ├── build_debug
- └── install_debug
+```sh
+[bundle exec] fastlane android build_debug
 ```
 
-The `dev` lane will orchestrate multiple reusable lanes into a single command, demonstrating Fastlane's philosophy of composing small, focused automation tasks into larger development workflows.
+Build Debug APK
 
-## Learning Focus
+### android install_debug
 
-This repository is intentionally built as a learning resource. Every lane is implemented step by step to understand:
+```sh
+[bundle exec] fastlane android install_debug
+```
 
-- Fastlane architecture
-- Lanes and workflow composition
-- Built-in actions (`gradle`, `sh`, etc.)
-- Android build automation
-- CI/CD best practices
-- Scalable automation for React Native projects
+Install Debug APK
 
-## If you find this repository helpful, consider giving it a ⭐.
+### android dev
 
-Thank you for your support! 🚀
+```sh
+[bundle exec] fastlane android dev
+```
+
+Development workflow
+
+----
+
+This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
+
+More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
+
+The documentation of _fastlane_ can be found on [docs.fastlane.tools](https://docs.fastlane.tools).

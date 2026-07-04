@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import Animated, {
   AnimatedProps,
-  FadeIn,
   FadeInDown,
   FadeInLeft,
   FadeOutLeft,
@@ -19,9 +18,7 @@ import Animated, {
   withSpring,
   useAnimatedStyle,
   interpolateColor,
-  interpolate,
 } from 'react-native-reanimated';
-import { images } from '../AppleInvites/images';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -43,23 +40,10 @@ const _dotSize = _dotContainer / 3;
 const _activeDot = '#fff';
 const _inactiveDot = '#aaa';
 
-const Button = ({
-  children,
-  style,
-  ...rest
-}: AnimatedProps<PressableProps>) => {
+const Button = ({ children, ...rest }: AnimatedProps<PressableProps>) => {
   return (
     <AnimatedPressable
-      style={[
-        {
-          height: _buttonHeight,
-          borderRadius: _buttonHeight / 2,
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingHorizontal: _spacing * 2,
-        },
-        style,
-      ]}
+      style={[styles.button, styles]}
       {...rest}
       entering={_enteringFadeInLeft}
       exiting={_exitingFadeInLeft}
@@ -88,25 +72,8 @@ function Dot({
   });
 
   return (
-    <View
-      style={{
-        width: _dotContainer,
-        height: _dotContainer,
-        justifyContent: 'center',
-        alignContent: 'center',
-        paddingLeft: _spacing,
-      }}
-    >
-      <Animated.View
-        style={[
-          {
-            width: _dotSize,
-            height: _dotSize,
-            borderRadius: _dotSize,
-          },
-          styleZ,
-        ]}
-      />
+    <View style={styles.dotContainer}>
+      <Animated.View style={[styles.dot, styleZ]} />
     </View>
   );
 }
@@ -122,22 +89,7 @@ function PaginationIndicator({
     };
   });
 
-  return (
-    <Animated.View
-      style={[
-        styleZ,
-        {
-          backgroundColor: '#29BE56',
-          height: _dotContainer,
-          width: _dotContainer,
-          borderRadius: _dotContainer,
-          position: 'absolute',
-          left: 0,
-          top: 0,
-        },
-      ]}
-    />
-  );
+  return <Animated.View style={[styleZ, styles.paginationIndicator]} />;
 }
 
 export function Pagination({
@@ -155,17 +107,8 @@ export function Pagination({
   });
 
   return (
-    <View
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <View
-        style={{
-          flexDirection: 'row',
-        }}
-      >
+    <View style={styles.paginationWrapper}>
+      <View style={styles.paginationRow}>
         <PaginationIndicator animation={animation} />
         {[...Array(total).keys()].map(i => (
           <Dot key={`dot-${i}`} index={i} animation={animation} />
@@ -185,31 +128,13 @@ const OnboardingPaginationIndicator = ({
   onIndexChange: (index: number) => void;
 }) => {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        padding: _spacing,
-        gap: _spacing * 2,
-      }}
-    >
+    <View style={styles.container}>
       <Pagination selectedIndex={selectedIndex} total={total} />
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: _spacing,
-        }}
-      >
+      <View style={styles.actions}>
         {selectedIndex > 0 && (
           <Button
-            style={{
-              backgroundColor: '#ddd',
-            }}
+            style={styles.backButton}
             onPress={() => {
-              // if (selectedIndex <= 0) {
-              //   return;
-              // }
-
               onIndexChange(selectedIndex - 1);
             }}
           >
@@ -217,10 +142,7 @@ const OnboardingPaginationIndicator = ({
           </Button>
         )}
         <Button
-          style={{
-            backgroundColor: '#0baaf9',
-            flex: 1,
-          }}
+          style={styles.continueButton}
           onPress={() => {
             if (selectedIndex >= total - 1) {
               return;
@@ -233,7 +155,7 @@ const OnboardingPaginationIndicator = ({
               key="finish"
               entering={_enteringFadeInDown}
               exiting={_exitingFadeOutUp}
-              style={{ color: '#fff' }}
+              style={styles.buttonText}
               layout={_layoutTransition}
             >
               Finish
@@ -243,7 +165,7 @@ const OnboardingPaginationIndicator = ({
               key="continue"
               entering={_enteringFadeInDown}
               exiting={_exitingFadeOutUp}
-              style={{ color: '#fff' }}
+              style={styles.buttonText}
               layout={_layoutTransition}
             >
               Continue
@@ -256,3 +178,70 @@ const OnboardingPaginationIndicator = ({
 };
 
 export default OnboardingPaginationIndicator;
+
+const styles = StyleSheet.create({
+  button: {
+    height: _buttonHeight,
+    borderRadius: _buttonHeight / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: _spacing * 2,
+  },
+
+  dotContainer: {
+    width: _dotContainer,
+    height: _dotContainer,
+    justifyContent: 'center',
+    alignContent: 'center',
+    paddingLeft: _spacing,
+  },
+
+  dot: {
+    width: _dotSize,
+    height: _dotSize,
+    borderRadius: _dotSize,
+  },
+
+  paginationWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  paginationRow: {
+    flexDirection: 'row',
+  },
+
+  paginationIndicator: {
+    backgroundColor: '#29BE56',
+    height: _dotContainer,
+    width: _dotContainer,
+    borderRadius: _dotContainer,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+  },
+
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: _spacing,
+    gap: _spacing * 2,
+  },
+
+  actions: {
+    flexDirection: 'row',
+    gap: _spacing,
+  },
+
+  backButton: {
+    backgroundColor: '#ddd',
+  },
+
+  continueButton: {
+    backgroundColor: '#0baaf9',
+  },
+
+  buttonText: {
+    color: '#fff',
+  },
+});

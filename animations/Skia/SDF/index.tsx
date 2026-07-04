@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { Canvas, Fill, Shader, Skia, vec } from '@shopify/react-native-skia';
 
 const source = Skia.RuntimeEffect.Make(`
@@ -45,7 +45,7 @@ const SDF = () => {
   const center = vec(width / 2, height / 2);
 
   return (
-    <Canvas style={{ flex: 1 }}>
+    <Canvas style={styles.container}>
       <Fill>
         <Shader source={source} uniforms={{ colors, center }} />
       </Fill>
@@ -54,6 +54,12 @@ const SDF = () => {
 };
 
 export default SDF;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 //  float d = sdCircle(xy-center, radius);
 

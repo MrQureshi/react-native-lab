@@ -7,10 +7,10 @@ platform :android do
     )
   end
 
-  # desc "Run ESLint for TypeScript/JavaScript"
-  # lane :eslint do
-  #   sh("yarn lint")
-  # end
+  desc "Run ESLint for TypeScript/JavaScript"
+  lane :eslint do
+    sh("yarn lint")
+  end
 
   # desc "unit testing"
   # lane :test do
@@ -36,7 +36,8 @@ platform :android do
   desc "Development workflow"
   lane :dev do
     clean
-    # eslint
+    eslint
+    # test
     build_debug
     install_debug
   end
