@@ -1,7 +1,12 @@
 name: React Native Quality Check
 
+# on:
+#   workflow_dispatch:
+
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - develop
 
 jobs:
   quality-check:
