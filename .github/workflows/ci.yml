@@ -4,21 +4,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  CI:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
-# name: React Native CI
 
-# on:
-#   workflow_dispatch:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
 
-# jobs:
-#   hello:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Say Hello
-#         run: echo "Hello GitHub Actions 🚀"
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
