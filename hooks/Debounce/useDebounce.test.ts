@@ -3,6 +3,10 @@ import { act } from 'react';
 
 import { useDebounce } from './useDebounce';
 
+type Props = {
+  value: string;
+};
+
 describe('useDebounce', () => {
   beforeEach(() => {
     jest.useFakeTimers();
@@ -13,15 +17,15 @@ describe('useDebounce', () => {
     jest.useRealTimers();
   });
 
-  it('should return the initial value', () => {
-    const { result } = renderHook(() => useDebounce('React'));
+  it('should return the initial value', async () => {
+    const { result } = await renderHook(() => useDebounce('hello'));
 
     expect(result.current).toBe('React');
   });
 
-  it('should update the value after the specified delay', () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 500),
+  it('should update the value after the specified delay', async () => {
+    const { result, rerender } = await renderHook(
+      (props: Props) => useDebounce(props.value, 500),
       {
         initialProps: {
           value: 'React',
@@ -42,9 +46,9 @@ describe('useDebounce', () => {
     expect(result.current).toBe('React Native');
   });
 
-  it('should reset the timer if the value changes before the delay', () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 500),
+  it('should reset the timer if the value changes before the delay', async () => {
+    const { result, rerender } = await renderHook(
+      (props: Props) => useDebounce(props.value, 500),
       {
         initialProps: {
           value: 'R',
