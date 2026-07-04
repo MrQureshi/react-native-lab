@@ -1,4 +1,4 @@
-name: React Native Quality Check
+name: React Native CI
 
 # on:
 #   workflow_dispatch:
