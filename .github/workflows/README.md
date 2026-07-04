@@ -1,6 +1,6 @@
-# 🚀 GitHub Actions – React Native CI
+# 🚀 GitHub Actions – React Native Quality Check
 
-A production-ready GitHub Actions workflow that automatically validates code quality for a React Native project on every push and pull request targeting the `main` and `develop` branches.
+A production-ready GitHub Actions workflow that automatically validates code quality for a React Native project on pull request targeting the `develop` into `main` branches.
 
 This workflow demonstrates how to build a clean Continuous Integration (CI) pipeline using official GitHub Actions while keeping release automation separate.
 
@@ -8,7 +8,6 @@ This workflow demonstrates how to build a clean Continuous Integration (CI) pipe
 
 ## ✨ Features
 
-- ✅ Automatic execution on every push to `main` and `develop`
 - ✅ Automatic execution on pull requests targeting `main` and `develop`
 - ✅ Repository checkout using the latest GitHub Action
 - ✅ Node.js environment setup
