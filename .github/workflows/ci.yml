@@ -6,6 +6,12 @@ name: React Native Quality Check
 on:
   push:
     branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
       - develop
 
 jobs:
