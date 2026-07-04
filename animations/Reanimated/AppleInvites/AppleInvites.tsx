@@ -17,12 +17,6 @@ import { runOnJS } from 'react-native-worklets';
 
 import { images } from './images';
 
-// const images = [
-//   'https://plus.unsplash.com/premium_photo-1708194041705-74586903c3d3?q=80&w=1365&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-//   'https://plus.unsplash.com/premium_photo-1732507213926-74542c982413?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-//   'https://plus.unsplash.com/premium_photo-1731974536212-4f809d2f9cde?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-// ];
-
 const { width } = Dimensions.get('window');
 const _itemWidth = width * 0.62;
 const _itemHeight = width * 1.67;
@@ -57,25 +51,8 @@ function Item({
   });
 
   return (
-    <Animated.View
-      style={[
-        {
-          width: _itemWidth,
-          height: _itemHeight,
-          justifyContent: 'center',
-        },
-        _styleZ,
-      ]}
-    >
-      <Image
-        source={{ uri: image }}
-        style={{
-          flex: 0.6,
-          borderRadius: 16,
-          borderColor: 'red',
-          borderWidth: 1,
-        }}
-      />
+    <Animated.View style={[style.itemView, _styleZ]}>
+      <Image source={{ uri: image }} style={style.itemImg} />
     </Animated.View>
   );
 }
@@ -89,7 +66,6 @@ const AppleInvites = () => {
       const floatIndex = (offset.value / _itemSize) % images.length;
 
       return Math.abs(Math.floor(floatIndex));
-      // return (offset.value / _itemSize) % images.length;
     },
     value => {
       console.log(value);
@@ -97,26 +73,12 @@ const AppleInvites = () => {
     },
   );
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000',
-      }}
-    >
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            opacity: 0.5,
-          },
-        ]}
-      >
+    <View style={style.container}>
+      <View style={[StyleSheet.absoluteFill, style.mainView]}>
         <Animated.Image
           key={`images-${activeIndex}`}
           source={{ uri: images[activeIndex] }}
-          style={{ flex: 1 }}
+          style={style.img}
           blurRadius={50}
           entering={FadeIn.duration(1000)}
           exiting={FadeOut.duration(1000)}
@@ -130,10 +92,7 @@ const AppleInvites = () => {
             .withInitialValues({
               translateY: -_itemHeight / 2,
             })}
-          style={{
-            flexDirection: 'row',
-            gap: _spacing,
-          }}
+          style={style.marqueeStyle}
         >
           {images.map((image, index) => {
             return (
@@ -152,28 +111,53 @@ const AppleInvites = () => {
         duration={500}
         key="stagger"
         stagger={500}
-        style={{
-          flex: 1,
-          // justifyContent: 'center',
-          alignItems: 'center',
-        }}
+        style={style.staggerStyle}
       >
         <Text>welcome to</Text>
-        <Text
-          style={{
-            fontSize: 20,
-          }}
-        >
-          Animation
-        </Text>
+        <Text style={style.txtTitle}>Animation</Text>
         <Text>
           Adding key directly to an Image only makes sense when it's rendered
           inside a List
         </Text>
       </Stagger>
-      {/* <Text>AppleInvites</Text> */}
     </View>
   );
 };
 
 export default AppleInvites;
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  mainView: {
+    opacity: 0.5,
+  },
+  itemView: {
+    width: _itemWidth,
+    height: _itemHeight,
+    justifyContent: 'center',
+  },
+  img: { flex: 1 },
+  marqueeStyle: {
+    flexDirection: 'row',
+    gap: _spacing,
+  },
+  staggerStyle: {
+    flex: 1,
+    // justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txtTitle: {
+    fontSize: 20,
+  },
+  itemImg: {
+    flex: 0.6,
+    borderRadius: 16,
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+});

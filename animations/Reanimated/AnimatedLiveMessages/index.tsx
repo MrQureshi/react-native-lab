@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { generateMessages, MessageItem } from './MockMessages';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { Messages } from './Messages';
@@ -37,56 +38,23 @@ const MessagesScreen = () => {
   }, [speed]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
+    <View style={style.container}>
       <Messages
         data={messages}
         renderItem={item => {
           return (
-            <View
-              style={{
-                gap: 4,
-                alignItems: 'flex-start',
-                padding: 4 * 2,
-                borderRadius: 12,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  gap: 4,
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                }}
-              >
+            <View style={style.innerContainer}>
+              <View style={style.mainView}>
                 <Image
-                  style={{
-                    width: 16,
-                    aspectRatio: 1,
-                    borderRadius: 24,
-                  }}
+                  style={style.img}
                   source={{
                     uri: item.item.user.avatar,
                   }}
                 />
-                <Text
-                  style={{
-                    fontSize: 12,
-                  }}
-                >
-                  {item.item.user.name}
-                </Text>
+                <Text style={style.txtName}>{item.item.user.name}</Text>
               </View>
               <View>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    backgroundColor: '#ddd',
-                  }}
-                >
+                <Text style={style.txtDescription}>
                   {item.item.description}
                 </Text>
               </View>
@@ -94,16 +62,10 @@ const MessagesScreen = () => {
           );
         }}
       />
-      <View
-        style={{
-          height: 200,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <View style={style.segmentView}>
         <SegmentedControl
           values={Object.keys(messageSpeed ?? {})}
-          style={{ width: 300 }}
+          style={style.segmentStyle}
           selectedIndex={Object.keys(messageSpeed).indexOf(speed)}
           onChange={event => {
             setSpeed(event.nativeEvent.value as keyof typeof messageSpeed);
@@ -115,3 +77,39 @@ const MessagesScreen = () => {
 };
 
 export default React.memo(MessagesScreen);
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  innerContainer: {
+    gap: 4,
+    alignItems: 'flex-start',
+    padding: 4 * 2,
+    borderRadius: 12,
+  },
+  mainView: {
+    flexDirection: 'row',
+    gap: 4,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  img: {
+    width: 16,
+    aspectRatio: 1,
+    borderRadius: 24,
+  },
+  txtName: {
+    fontSize: 12,
+  },
+  txtDescription: {
+    fontSize: 12,
+    backgroundColor: '#ddd',
+  },
+  segmentView: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  segmentStyle: { width: 300 },
+});

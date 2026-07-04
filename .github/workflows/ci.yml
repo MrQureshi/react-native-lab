@@ -8,5 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Say Hello
-        run: echo "Hello GitHub Actions 🚀"
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+# name: React Native CI
+
+# on:
+#   workflow_dispatch:
+
+# jobs:
+#   hello:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Say Hello
+#         run: echo "Hello GitHub Actions 🚀"
