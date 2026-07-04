@@ -12,6 +12,11 @@ platform :android do
   #   sh("yarn lint")
   # end
 
+  # desc "unit testing"
+  # lane :test do
+  #   sh("yarn test")
+  # end
+
   desc "Build Debug APK"
   lane :build_debug do
     gradle(
