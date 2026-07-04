@@ -21,7 +21,7 @@ const MessageBubble = ({ message, index }: Props) => {
     <Animated.View
       entering={FadeInDown.duration(220).withInitialValues({
         opacity: 0,
-        transform: [{ translateY: 18 }, { scale: 0.95 }],
+        transform: [{ translateY: 18 }],
       })}
       layout={LinearTransition.springify().damping(22).stiffness(140).mass(0.8)}
       style={[
