@@ -1,9 +1,29 @@
+#######################################################
+#                    Constants
+#######################################################
+
+# Android
+ANDROID_PROJECT_DIR = "android"
+
+# iOS
+IOS_WORKSPACE = "ios/TestJest.xcworkspace"
+IOS_SCHEME = "TestJest"
+IOS_CONFIGURATION = "Debug"
+IOS_SIMULATOR = "iPhone 16"
+IOS_APP_NAME = "TestJest.app"
+IOS_BUNDLE_ID = "org.reactjs.native.example.TestJest"
+
+#######################################################
+#                    Android
+#######################################################
+
 platform :android do
+
   desc "Clean Android project"
   lane :clean do
     gradle(
       task: "clean",
-      project_dir: "android"
+      project_dir: ANDROID_PROJECT_DIR
     )
   end
 
@@ -12,7 +32,7 @@ platform :android do
     sh("yarn lint")
   end
 
-  # desc "unit testing"
+  # desc "Run Unit Tests"
   # lane :test do
   #   sh("yarn test")
   # end
@@ -21,7 +41,7 @@ platform :android do
   lane :build_debug do
     gradle(
       task: "assembleDebug",
-      project_dir: "android"
+      project_dir: ANDROID_PROJECT_DIR
     )
   end
 
@@ -29,7 +49,23 @@ platform :android do
   lane :install_debug do
     gradle(
       task: "installDebug",
-      project_dir: "android"
+      project_dir: ANDROID_PROJECT_DIR
+    )
+  end
+
+  desc "Build Release APK"
+  lane :build_release do
+    gradle(
+      task: "assembleRelease",
+      project_dir: ANDROID_PROJECT_DIR
+    )
+  end
+
+  desc "Build Release App Bundle (AAB)"
+  lane :build_aab do
+    gradle(
+      task: "bundleRelease",
+      project_dir: ANDROID_PROJECT_DIR
     )
   end
 
@@ -40,5 +76,86 @@ platform :android do
     # test
     build_debug
     install_debug
+    build_release
+    build_aab
   end
+
+end
+
+#######################################################
+#                       iOS
+#######################################################
+
+platform :ios do
+
+  desc "Clean iOS Derived Data"
+  lane :clean do
+    clear_derived_data
+  end
+
+  desc "Run ESLint"
+  lane :eslint do
+    sh("yarn lint")
+  end
+
+  desc "Build Debug app for iOS Simulator"
+  lane :build_debug do
+    build_app(
+      workspace: IOS_WORKSPACE,
+      scheme: IOS_SCHEME,
+      configuration: IOS_CONFIGURATION,
+      sdk: "iphonesimulator",
+      destination: "generic/platform=iOS Simulator",
+      skip_archive: true,
+      skip_package_ipa: true,
+      skip_codesigning: true,
+      xcargs: "CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO"
+    )
+
+    ENV["APP_PATH"] = sh(
+      "find ~/Library/Developer/Xcode/DerivedData -name '#{IOS_APP_NAME}' | tail -1"
+    ).strip
+
+    UI.success("📱 App built successfully")
+    UI.message("📦 #{ENV['APP_PATH']}")
+  end
+
+  desc "Boot iOS Simulator"
+  lane :boot_simulator do |options|
+    simulator = options[:device] || IOS_SIMULATOR
+
+    sh("open -a Simulator")
+    sh("xcrun simctl boot '#{simulator}' || true")
+  end
+
+  desc "Install app on booted simulator"
+  lane :install_debug do
+    app_path = ENV["APP_PATH"]
+
+    if app_path.to_s.empty?
+      app_path = sh(
+        "find ~/Library/Developer/Xcode/DerivedData -name '#{IOS_APP_NAME}' | tail -1"
+      ).strip
+    end
+
+    UI.user_error!("#{IOS_APP_NAME} not found.") if app_path.empty?
+
+    sh("xcrun simctl install booted '#{app_path}'")
+  end
+
+  desc "Launch app"
+  lane :launch_app do
+    sh("xcrun simctl launch booted #{IOS_BUNDLE_ID}")
+  end
+
+  desc "Development workflow"
+  lane :dev do
+    clean
+    eslint
+    build_debug
+    boot_simulator
+    install_debug
+    launch_app
+  end
+
 end
