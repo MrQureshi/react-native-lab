@@ -76,6 +76,32 @@ platform :android do
     )
   end
 
+  desc "Increment Android version code"
+  lane :increment_version do
+
+    version_file = "android/version.properties"
+
+    properties = {}
+
+    File.readlines(version_file).each do |line|
+      key, value = line.strip.split("=")
+      properties[key] = value
+    end
+
+    current_version = properties["VERSION_CODE"].to_i
+    new_version = current_version + 1
+
+    properties["VERSION_CODE"] = new_version.to_s
+
+    File.open(version_file, "w") do |file|
+      properties.each do |key, value|
+        file.puts("#{key}=#{value}")
+      end
+    end
+
+    UI.success("🚀 VERSION_CODE updated: #{current_version} → #{new_version}")
+  end
+
   desc "Upload Debug APK to Firebase App Distribution"
   lane :firebase do
     build_debug
@@ -86,7 +112,9 @@ platform :android do
       android_artifact_path: DEBUG_APK_PATH,
       service_credentials_file: FIREBASE_CREDENTIALS,
       release_notes: "Uploaded via Fastlane",
+      notify_testers: true,
       groups: "qa"
+
       # release_notes: last_git_commit[:message]
       # release_notes: changelog_from_git_commits 
     )
@@ -100,6 +128,7 @@ platform :android do
         android_artifact_path: RELEASE_APK_PATH,
         service_credentials_file: FIREBASE_CREDENTIALS,
         release_notes: last_git_commit[:message],
+        notify_testers: true,
         groups: "qa"
       )
     end
@@ -108,6 +137,7 @@ platform :android do
   lane :dev do
     clean
     eslint
+    increment_version
     # test
     # build_debug
     # install_debug
