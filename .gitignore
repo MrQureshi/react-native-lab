@@ -76,3 +76,6 @@ yarn-error.log
 
 #firebase
 secrets/
+
+#CI/CD
+artifacts/

@@ -65,6 +65,40 @@ jobs:
       - name: Check Formatting
         run: yarn prettier --check .
 
+      - name: Generate Release Notes
+        shell: bash
+        run: |
+          mkdir -p artifacts
+
+          VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
+          VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
+
+          cat > artifacts/release-notes.md <<EOF
+          🚀 React Native Lab
+
+          📅 Release Date
+          $(date +"%d %b %Y %I:%M %p")
+
+          📦 Version
+          ${VERSION_NAME} (${VERSION_CODE})
+
+          # 🌿 Branch
+          # ${{ github.head_ref }}
+
+          📌 Pull Request
+          ${{ github.event.pull_request.title }}
+
+          👤 Author
+          ${{ github.actor }}
+
+          ----------------------------------------
+
+          ${{ github.event.pull_request.body }}
+
+          ----------------------------------------
+
+          🤖 Built Automatically via GitHub Actions + Fastlane
+
       - name: Create Firebase Service Account
         run: |
           mkdir -p secrets
