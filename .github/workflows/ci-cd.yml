@@ -82,8 +82,8 @@ jobs:
           📦 Version
           ${VERSION_NAME} (${VERSION_CODE})
 
-          # 🌿 Branch
-          # ${{ github.head_ref }}
+          🌿 Branch
+          ${{ github.head_ref }}
 
           📌 Pull Request
           ${{ github.event.pull_request.title }}
@@ -98,6 +98,7 @@ jobs:
           ----------------------------------------
 
           🤖 Built Automatically via GitHub Actions + Fastlane
+          EOF
 
       - name: Create Firebase Service Account
         run: |
