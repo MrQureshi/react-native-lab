@@ -79,8 +79,8 @@ platform :android do
   desc "Increment Android version code"
   lane :increment_version do
 
-    version_file = "android/version.properties"
-
+    version_file = File.join(FastlaneCore::FastlaneFolder.path, "..", "android", "version.properties")
+    version_file = File.expand_path(version_file)
     properties = {}
 
     File.readlines(version_file).each do |line|
@@ -112,7 +112,6 @@ platform :android do
       android_artifact_path: DEBUG_APK_PATH,
       service_credentials_file: FIREBASE_CREDENTIALS,
       release_notes: "Uploaded via Fastlane",
-      notify_testers: true,
       groups: "qa"
 
       # release_notes: last_git_commit[:message]
@@ -128,7 +127,6 @@ platform :android do
         android_artifact_path: RELEASE_APK_PATH,
         service_credentials_file: FIREBASE_CREDENTIALS,
         release_notes: last_git_commit[:message],
-        notify_testers: true,
         groups: "qa"
       )
     end
