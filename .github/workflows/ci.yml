@@ -44,6 +44,12 @@ jobs:
         with:
           bundler-cache: true
 
+      # - name: Setup Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.4'
+      #     bundler-cache: true
+
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
