@@ -12,6 +12,13 @@ IOS_CONFIGURATION = "Debug"
 IOS_SIMULATOR = "iPhone 16"
 IOS_APP_NAME = "TestJest.app"
 IOS_BUNDLE_ID = "org.reactjs.native.example.TestJest"
+FIREBASE_APP_ID ="1:414182792740:android:fed42b913daba69e6142b1"
+
+DEBUG_APK_PATH = "android/app/build/outputs/apk/debug/app-debug.apk"
+RELEASE_APK_PATH = "android/app/build/outputs/apk/release/app-release.apk"
+RELEASE_AAB_PATH = "android/app/build/outputs/bundle/release/app-release.aab"
+
+FIREBASE_CREDENTIALS = "secrets/firebase-service-account.json"
 
 #######################################################
 #                    Android
@@ -69,15 +76,45 @@ platform :android do
     )
   end
 
+  desc "Upload Debug APK to Firebase App Distribution"
+  lane :firebase do
+    build_debug
+
+    firebase_app_distribution(
+      app: FIREBASE_APP_ID,
+      android_artifact_type: "APK",
+      android_artifact_path: DEBUG_APK_PATH,
+      service_credentials_file: FIREBASE_CREDENTIALS,
+      release_notes: "Uploaded via Fastlane",
+      groups: "qa"
+      # release_notes: last_git_commit[:message]
+      # release_notes: changelog_from_git_commits 
+    )
+  end
+
+  desc "Upload Release APK to Firebase App Distribution"
+    lane :firebase_release do
+      firebase_app_distribution(
+        app: FIREBASE_APP_ID,
+        android_artifact_type: "APK",
+        android_artifact_path: RELEASE_APK_PATH,
+        service_credentials_file: FIREBASE_CREDENTIALS,
+        release_notes: last_git_commit[:message],
+        groups: "qa"
+      )
+    end
+
   desc "Development workflow"
   lane :dev do
     clean
     eslint
     # test
-    build_debug
-    install_debug
+    # build_debug
+    # install_debug
     build_release
-    build_aab
+    # build_aab
+    firebase_release
+    UI.message("🚀 APK is ready and deploy to firebase")
   end
 
 end

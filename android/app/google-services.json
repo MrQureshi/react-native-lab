@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "414182792740",
+    "project_id": "react-native-lab-c6b04",
+    "storage_bucket": "react-native-lab-c6b04.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414182792740:android:fed42b913daba69e6142b1",
+        "android_client_info": {
+          "package_name": "com.testjest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDviRSeMdZW5fZhNBoz-IGd0m27D6ca0zQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

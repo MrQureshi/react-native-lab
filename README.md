@@ -6,7 +6,7 @@
 
 > 🚧 **Currently exploring CI/CD with Fastlane and GitHub Actions**, building automated quality checks, reusable workflows, and release pipelines for React Native development.
 
-> ✅ Every push and pull request is automatically validated with GitHub Actions to ensure consistent code quality using ESLint and TypeScript checks.
+> ✅ Every pull request is automatically validated with GitHub Actions to ensure consistent code quality using ESLint and TypeScript checks.
 
 > 📈 This repository continues to evolve with modern DevOps practices, including CI automation, code quality enforcement, and production-ready mobile development workflows.
 
