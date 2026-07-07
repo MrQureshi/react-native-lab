@@ -112,7 +112,6 @@ platform :android do
       android_artifact_path: DEBUG_APK_PATH,
       service_credentials_file: FIREBASE_CREDENTIALS,
       release_notes: "Uploaded via Fastlane",
-      notify_testers: true,
       groups: "qa"
 
       # release_notes: last_git_commit[:message]
@@ -128,7 +127,6 @@ platform :android do
         android_artifact_path: RELEASE_APK_PATH,
         service_credentials_file: FIREBASE_CREDENTIALS,
         release_notes: last_git_commit[:message],
-        notify_testers: true,
         groups: "qa"
       )
     end
