@@ -25,13 +25,6 @@ function App() {
       <SafeAreaProvider>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <TikTopComment />
-        {/* <Messages /> */}
-        {/* <Onboarding /> */}
-        {/* <AppleInvites /> */}
-        {/* <SDF /> */}
-        {/* <StarNest /> */}
-        {/* <ZozuarShader /> */}
-        {/* <LiquidShape /> */}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

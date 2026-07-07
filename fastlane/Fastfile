@@ -111,9 +111,10 @@ platform :android do
       android_artifact_type: "APK",
       android_artifact_path: DEBUG_APK_PATH,
       service_credentials_file: FIREBASE_CREDENTIALS,
-      release_notes: "Uploaded via Fastlane",
-      groups: "qa"
-
+      release_notes_file: "artifacts/release-notes.md",
+      groups: "qa",
+      
+      # release_notes: "Uploaded via Fastlane",
       # release_notes: last_git_commit[:message]
       # release_notes: changelog_from_git_commits 
     )
@@ -126,7 +127,7 @@ platform :android do
         android_artifact_type: "APK",
         android_artifact_path: RELEASE_APK_PATH,
         service_credentials_file: FIREBASE_CREDENTIALS,
-        release_notes: last_git_commit[:message],
+        release_notes_file: "artifacts/release-notes.md",
         groups: "qa"
       )
     end
