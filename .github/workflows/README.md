@@ -1,143 +1,230 @@
-# 🚀 GitHub Actions – React Native Quality Check
+# 🚀 GitHub Actions – React Native CI/CD Pipeline
 
-A production-ready GitHub Actions workflow that automatically validates code quality for a React Native project on pull request targeting the `develop` into `main` branches.
+A production-ready GitHub Actions workflow that automatically validates code quality, builds an Android Release APK using Fastlane, and distributes the application to Firebase App Distribution whenever a pull request targets the `develop` into `main` branches.
 
-This workflow demonstrates how to build a clean Continuous Integration (CI) pipeline using official GitHub Actions while keeping release automation separate.
+This workflow demonstrates a modern Continuous Integration (CI) pipeline where GitHub Actions orchestrates the workflow while Fastlane manages the mobile automation.
 
 ---
 
-## ✨ Features
+# ✨ Features
 
-- ✅ Automatic execution on pull requests targeting `main` and `develop`
-- ✅ Repository checkout using the latest GitHub Action
-- ✅ Node.js environment setup
+- ✅ Automatic execution on Pull Requests targeting `develop` and `main`
+- ✅ Repository checkout using the latest GitHub Actions
+- ✅ Node.js 22 environment setup
+- ✅ Java 17 environment setup
+- ✅ Ruby & Bundler setup for Fastlane
 - ✅ Yarn dependency caching
-- ✅ Dependency installation
+- ✅ Ruby dependency caching
+- ✅ JavaScript dependency installation
 - ✅ TypeScript type checking
-- ✅ ESLint validation
 - ✅ Prettier formatting verification
-- ⏸️ Ready for Jest tests when they are added
+- ✅ Firebase Service Account generation from GitHub Secrets
+- ✅ Android Release APK generation using Fastlane
+- ✅ Automatic Firebase App Distribution
+- ⏸️ Ready for Jest tests
 
 ---
 
-## 📁 Workflow Structure
+# 📁 Workflow Structure
 
 ```text
 .github/
 └── workflows/
-    └── qualityCheck.yml
+    └── ci-cd.yml
 ```
 
 ---
 
-## ⚙️ Pipeline Flow
+# ⚙️ CI/CD Pipeline Flow
 
 ```text
-Push / Pull Request
-          │
-          ▼
+Pull Request
+      │
+      ▼
 GitHub Actions Trigger
-          │
-          ▼
+      │
+      ▼
 Checkout Repository
-          │
-          ▼
+      │
+      ▼
 Setup Node.js
-          │
-          ▼
-Restore Yarn Cache
-          │
-          ▼
-Install Dependencies
-          │
-          ▼
+      │
+      ▼
+Setup Java
+      │
+      ▼
+Setup Ruby
+      │
+      ▼
+Install JavaScript Dependencies
+      │
+      ▼
+Install Ruby Dependencies
+      │
+      ▼
 TypeScript Type Check
-          │
-          ▼
-ESLint
-          │
-          ▼
+      │
+      ▼
 Prettier Check
-          │
-          ▼
-✅ Quality Check Passed
+      │
+      ▼
+Create Firebase Service Account
+      │
+      ▼
+Fastlane Android Development Workflow
+      │
+      ├── Clean Android Project
+      ├── Run ESLint
+      ├── Build Release APK
+      └── Upload APK to Firebase App Distribution
+      │
+      ▼
+✅ Firebase Build Ready for Testing
 ```
 
 ---
 
-## 📋 Workflow Details
+# 📋 Workflow Details
 
-| Item            | Value           |
-| --------------- | --------------- |
-| Workflow        | React Native CI |
-| Job             | Quality Check   |
-| Runner          | `ubuntu-latest` |
-| Node.js         | `22`            |
-| Package Manager | Yarn            |
+| Item            | Value                                 |
+| --------------- | ------------------------------------- |
+| Workflow        | React Native CI                       |
+| Job             | Quality Check & Firebase Distribution |
+| Runner          | `ubuntu-latest`                       |
+| Node.js         | `22`                                  |
+| Java            | `17 (Temurin)`                        |
+| Ruby            | `.ruby-version`                       |
+| Package Manager | Yarn                                  |
+| Build Tool      | Fastlane                              |
+| Distribution    | Firebase App Distribution             |
 
 ---
 
-## 🚀 Workflow Trigger
+# 🚀 Workflow Trigger
 
 ```yaml
 on:
-  push:
-    branches:
-      - main
-      - develop
-
   pull_request:
     branches:
       - main
       - develop
 ```
 
-The workflow automatically runs whenever:
+The workflow automatically runs whenever a Pull Request targets:
 
-- Code is pushed to the **main** branch.
-- Code is pushed to the **develop** branch.
-- A pull request targets the **main** branch.
-- A pull request targets the **develop** branch.
+- `develop`
+- `main`
 
 ---
 
-## 🔍 Quality Checks
+# 🔍 Pipeline Steps
 
-### Checkout Repository
+## Checkout Repository
 
 Downloads the latest source code into the GitHub Actions runner.
 
-### Setup Node.js
+---
 
-Installs Node.js and restores the Yarn dependency cache for faster workflow execution.
+## Setup Node.js
 
-### Install Dependencies
+Installs Node.js and restores the Yarn dependency cache.
 
-Installs project dependencies using the lockfile to ensure consistent and reproducible installations.
+---
 
-### TypeScript Type Check
+## Setup Java
+
+Installs Java 17 required for Android builds.
+
+---
+
+## Setup Ruby
+
+Installs Ruby and Bundler required by Fastlane.
+
+---
+
+## Install JavaScript Dependencies
+
+Installs all project dependencies using the lockfile.
+
+---
+
+## Install Ruby Dependencies
+
+Installs all Ruby gems defined in the project's `Gemfile`.
+
+---
+
+## TypeScript Type Check
 
 Runs the TypeScript compiler to detect type errors without generating output files.
 
-### ESLint
+---
 
-Checks the project against the configured linting rules.
+## Prettier Check
 
-### Prettier
-
-Verifies that all project files follow the configured formatting rules.
+Ensures the repository follows the configured formatting rules.
 
 ---
 
-## 📌 Purpose
+## Create Firebase Service Account
 
-This workflow ensures that every code change:
+Recreates the Firebase Service Account JSON file from the encrypted GitHub repository secret (`FIREBASE_SERVICE_ACCOUNT`).
 
-- Builds with the correct dependency versions.
-- Contains no TypeScript compilation errors.
-- Passes ESLint validation.
+This allows Fastlane to authenticate securely without storing credentials in the repository.
+
+---
+
+## Fastlane Android Development Workflow
+
+Executes:
+
+```bash
+bundle exec fastlane android dev
+```
+
+The `dev` lane performs the following tasks:
+
+1. Clean Android project
+2. Run ESLint
+3. Build Release APK
+4. Upload the Release APK to Firebase App Distribution
+
+---
+
+# 🔐 Required GitHub Secret
+
+| Secret                     | Description                                                                                    |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| `FIREBASE_SERVICE_ACCOUNT` | Firebase Service Account JSON used by Fastlane to authenticate with Firebase App Distribution. |
+
+---
+
+# 📌 Purpose
+
+This workflow ensures that every Pull Request:
+
+- Uses the correct development environment.
+- Passes TypeScript validation.
 - Follows the project's formatting standards.
+- Successfully builds an Android Release APK.
+- Automatically distributes the latest build to Firebase App Distribution for testing.
 
-By automating these checks, code quality is verified before changes are merged or released.
+By combining GitHub Actions with Fastlane, the repository provides a reliable, repeatable, and fully automated mobile CI/CD workflow.
 
 ---
+
+# 🛠 Technologies
+
+- GitHub Actions
+- Fastlane
+- Firebase App Distribution
+- Ruby
+- Bundler
+- Node.js
+- Java 17
+- Yarn
+- TypeScript
+- ESLint
+- Prettier
+- React Native
