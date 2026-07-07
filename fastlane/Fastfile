@@ -79,8 +79,8 @@ platform :android do
   desc "Increment Android version code"
   lane :increment_version do
 
-    version_file = "android/version.properties"
-
+    version_file = File.join(FastlaneCore::FastlaneFolder.path, "..", "android", "version.properties")
+    version_file = File.expand_path(version_file)
     properties = {}
 
     File.readlines(version_file).each do |line|
