@@ -108,5 +108,92 @@ jobs:
       - name: Run Fastlane Android Development Workflow
         run: bundle exec fastlane android dev
 
+      - name: Notify Slack
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
+          VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
+
+          DATE=$(date +"%d %b %Y %I:%M %p")
+
+          BRANCH="${{ github.head_ref }}"
+          AUTHOR="${{ github.actor }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          payload=$(cat <<EOF
+          {
+            "text": "🚀 *New Android Build Uploaded to Firebase*",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "🚀 React Native Lab"
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Version:*\n${VERSION_NAME} (${VERSION_CODE})"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Branch:*\n${BRANCH}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Developer:*\n${AUTHOR}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Release Date:*\n${DATE}"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Pull Request*\n${PR_TITLE}"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${PR_BODY}"
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View GitHub Workflow"
+                    },
+                    "url": "${RUN_URL}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          )
+
+          curl \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data "$payload" \
+            "$SLACK_WEBHOOK_URL"
+
       # - name: Run Tests
       # run: yarn test
