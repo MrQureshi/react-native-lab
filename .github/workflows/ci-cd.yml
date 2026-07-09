@@ -60,7 +60,7 @@ jobs:
         run: yarn tsc --noEmit
 
       - name: Lint
-        run: yarn lint
+        run: yarn lintttt
 
       - name: Check Formatting
         run: yarn prettier --check .
@@ -133,6 +133,37 @@ jobs:
             '{text:$text}' > payload.json
 
           cat payload.json
+
+          curl \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data @payload.json \
+            "$SLACK_WEBHOOK_URL"
+
+      - name: Notify Slack (Failure)
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          MESSAGE="🚨 CI/CD Pipeline Failed
+
+          ❌ Repository: ${{ github.repository }}
+
+          🌿 Branch: ${{ github.head_ref }}
+
+          👤 Developer: ${{ github.actor }}
+
+          📌 Pull Request:
+          ${{ github.event.pull_request.title }}
+
+          🔗 Workflow:
+          https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Please check the workflow logs."
+
+          jq -n \
+            --arg text "$MESSAGE" \
+            '{text:$text}' > payload.json
 
           curl \
             -X POST \
