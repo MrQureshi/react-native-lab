@@ -107,7 +107,6 @@ jobs:
 
       - name: Run Fastlane Android Development Workflow
         run: bundle exec fastlane android dev
-
       - name: Notify Slack
         if: success()
         continue-on-error: true
@@ -117,15 +116,21 @@ jobs:
           VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
           VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
 
+          ARTIFACT_URL="${{ steps.upload_apk.outputs.artifact-url }}"
+
           MESSAGE="🚀 React Native Lab
 
-          Version: ${VERSION_NAME} (${VERSION_CODE})
+          📦 Version: ${VERSION_NAME} (${VERSION_CODE})
 
-          Branch: ${{ github.head_ref }}
+          🌿 Branch: ${{ github.head_ref }}
 
-          Developer: ${{ github.actor }}
+          👤 Developer: ${{ github.actor }}
 
-          PR: ${{ github.event.pull_request.title }}
+          📌 PR:
+          ${{ github.event.pull_request.title }}
+
+          📥 APK Download
+          ${ARTIFACT_URL}
 
           ${{ github.event.pull_request.body }}"
 
@@ -138,7 +143,6 @@ jobs:
             -H "Content-Type: application/json" \
             --data @payload.json \
             "$SLACK_WEBHOOK_URL"
-
       - name: List Generated APKs
         if: success()
         run: |
