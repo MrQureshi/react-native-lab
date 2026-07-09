@@ -116,7 +116,9 @@ jobs:
           VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
           VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
 
-          ARTIFACT_URL="${{ steps.upload_apk.outputs.artifact-url }}"
+          run: |
+          echo "Artifact URL:"
+          echo "${{ steps.upload_apk.outputs.artifact-url }}"
 
           MESSAGE="🚀 React Native Lab
 
