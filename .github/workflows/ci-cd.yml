@@ -108,8 +108,9 @@ jobs:
       - name: Run Fastlane Android Development Workflow
         run: bundle exec fastlane android dev
 
-      - name: Notify Slack
+            - name: Notify Slack
         if: success()
+        continue-on-error: true
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
@@ -132,13 +133,17 @@ jobs:
             --arg text "$MESSAGE" \
             '{text:$text}' > payload.json
 
-          cat payload.json
-
           curl \
             -X POST \
             -H "Content-Type: application/json" \
             --data @payload.json \
             "$SLACK_WEBHOOK_URL"
+
+      - name: List Generated APKs
+        if: success()
+        run: |
+          echo "Generated APKs:"
+          find android -type f -name "*.apk"
 
       - name: Upload Release APK
         if: success()
@@ -151,6 +156,7 @@ jobs:
 
       - name: Notify Slack (Failure)
         if: failure()
+        continue-on-error: true
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
