@@ -108,7 +108,7 @@ jobs:
       - name: Run Fastlane Android Development Workflow
         run: bundle exec fastlane android dev
 
-            - name: Notify Slack
+      - name: Notify Slack
         if: success()
         continue-on-error: true
         env:
