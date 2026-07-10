@@ -71,7 +71,7 @@ jobs:
           mkdir -p artifacts
 
           VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
-          VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
+          VERSION_CODE=${{ github.run_number }}
 
           cat > artifacts/release-notes.md <<EOF
           🚀 React Native Lab
@@ -105,8 +105,13 @@ jobs:
           mkdir -p secrets
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > secrets/firebase-service-account.json
 
+      - name: Set Android Version Code
+        run: |
+          echo "VERSION_CODE=${{ github.run_number }}" >> $GITHUB_ENV
+
       - name: Run Fastlane Android Development Workflow
         run: bundle exec fastlane android dev
+
       - name: Notify Slack
         if: success()
         continue-on-error: true
