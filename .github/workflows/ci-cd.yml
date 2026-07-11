@@ -146,6 +146,11 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Debug Artifact URL
+        run: |
+          echo "Artifact URL:"
+          echo "${{ steps.upload_apk.outputs.artifact-url }}"
+
       - name: Notify Slack
         if: success()
         continue-on-error: true
