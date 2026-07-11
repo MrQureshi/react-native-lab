@@ -146,10 +146,11 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Debug Artifact URL
-        run: |
-          echo "Artifact URL:"
-          echo "${{ steps.upload_apk.outputs.artifact-url }}"
+      # temporary step:
+      # - name: Debug Artifact URL
+      #   run: |
+      #     echo "Artifact URL:"
+      #     echo "${{ steps.upload_apk.outputs.artifact-url }}"
 
       - name: Notify Slack
         if: success()
@@ -159,6 +160,9 @@ jobs:
         run: |
           VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
           VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
+
+          ARTIFACT_URL="${{ steps.upload_apk.outputs.artifact-url }}"
+
 
           MESSAGE="🚀 React Native Lab
 
