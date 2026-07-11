@@ -129,10 +129,7 @@ platform :android do
         service_credentials_file: FIREBASE_CREDENTIALS,
         release_notes_file: "artifacts/release-notes.md",
         groups: "qa",
-        upload_timeout: 1200
       )
-      
-      File.write("artifacts/firebase_release.json", JSON.pretty_generate(release))
     end
 
   desc "Development workflow"
