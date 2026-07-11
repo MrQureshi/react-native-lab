@@ -4,11 +4,15 @@
 
 > 📖 **Each feature has its own dedicated README** that walks through the implementation, explains what's happening behind the scenes, highlights important concepts, and documents the learning journey—making it easier to understand what is actually going on inside each experiment.
 
-> 🚧 **Currently exploring CI/CD with Fastlane and GitHub Actions**, building automated quality checks, reusable workflows, and release pipelines for React Native development.
+> 🚧 **Currently exploring CI/CD with Fastlane and GitHub Actions**, building automated quality checks, reusable workflows, release pipelines, and production-ready mobile DevOps practices for React Native development.
 
-> ✅ Every pull request is automatically validated with GitHub Actions to ensure consistent code quality using ESLint and TypeScript checks.
+> 🚀 **Implemented a production-ready Android CI/CD pipeline** powered by GitHub Actions, Fastlane, Firebase App Distribution, automatic Android versioning, dynamic release notes, secure Google Cloud authentication, and Slack notifications.
 
-> 📈 This repository continues to evolve with modern DevOps practices, including CI automation, code quality enforcement, and production-ready mobile development workflows.
+> 📦 **Every successful Pull Request automatically validates code quality, builds a Release APK, uploads it to Firebase App Distribution, stores it as a GitHub Actions artifact, and notifies the development team through Slack.**
+
+> 🔄 **The release pipeline is fully automated**, generating unique Android build numbers, creating pull request–based release notes, enforcing code quality, and delivering builds to QA without any manual intervention.
+
+> 📈 This repository continues to evolve with modern DevOps practices, scalable architecture, reusable automation, and production-ready mobile engineering workflows.
 
 ---
 
@@ -18,7 +22,7 @@ A collection of **React Native experiments, concepts, animations, performance op
 
 This repository serves as my personal learning laboratory where I continuously explore **React Native**, **Reanimated**, **Skia**, UI/UX animations, performance optimization, scalable architecture, modern development workflows, and **CI/CD automation with Fastlane and GitHub Actions**.
 
-Beyond building features, this repository also focuses on engineering best practices, including automated code quality checks, linting, continuous integration, and reusable development workflows to help maintain production-quality standards.
+Beyond building features, this repository also focuses on engineering best practices, including automated code quality checks, linting, continuous integration, continuous delivery, release automation, Firebase App Distribution, Slack notifications, and reusable development workflows to help maintain production-quality standards.
 
 **Every feature and experiment includes its own dedicated README**, explaining the implementation, architecture, key concepts, and learning objectives so you can understand not just **how** it works, but **why** it was built that way. Whether you're exploring an animation, a UI component, an architectural pattern, or a CI/CD workflow, you'll find detailed documentation to help you understand what's actually happening behind the scenes.
 

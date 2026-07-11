@@ -1,8 +1,8 @@
 # 🚀 GitHub Actions – React Native CI/CD Pipeline
 
-A production-ready GitHub Actions workflow that automatically validates code quality, builds an Android Release APK using Fastlane, and distributes the application to Firebase App Distribution whenever a pull request targets the `develop` into `main` branches.
+A production-ready GitHub Actions workflow that automatically validates code quality, builds an Android Release APK using Fastlane, generates release notes, uploads the application to Firebase App Distribution, stores the APK as a GitHub Actions artifact, and notifies the team through Slack whenever a Pull Request targets the `develop` or `main` branches.
 
-This workflow demonstrates a modern Continuous Integration (CI) pipeline where GitHub Actions orchestrates the workflow while Fastlane manages the mobile automation.
+This workflow demonstrates a modern Continuous Integration and Continuous Delivery (CI/CD) pipeline where GitHub Actions orchestrates the workflow while Fastlane manages the mobile automation.
 
 ---
 
@@ -17,10 +17,16 @@ This workflow demonstrates a modern Continuous Integration (CI) pipeline where G
 - ✅ Ruby dependency caching
 - ✅ JavaScript dependency installation
 - ✅ TypeScript type checking
+- ✅ ESLint validation
 - ✅ Prettier formatting verification
+- ✅ Automatic Android Version Code generation
+- ✅ Dynamic Release Notes generated from the Pull Request
 - ✅ Firebase Service Account generation from GitHub Secrets
 - ✅ Android Release APK generation using Fastlane
 - ✅ Automatic Firebase App Distribution
+- ✅ APK uploaded as a GitHub Actions Artifact
+- ✅ Slack notification on successful builds
+- ✅ Slack notification on failed builds
 - ⏸️ Ready for Jest tests
 
 ---
@@ -65,10 +71,19 @@ Install Ruby Dependencies
 TypeScript Type Check
       │
       ▼
+ESLint
+      │
+      ▼
 Prettier Check
       │
       ▼
+Generate Release Notes
+      │
+      ▼
 Create Firebase Service Account
+      │
+      ▼
+Generate Android Version Code
       │
       ▼
 Fastlane Android Development Workflow
@@ -79,24 +94,32 @@ Fastlane Android Development Workflow
       └── Upload APK to Firebase App Distribution
       │
       ▼
-✅ Firebase Build Ready for Testing
+Upload APK Artifact
+      │
+      ▼
+Slack Notification
+      │
+      ▼
+✅ Build Ready for QA
 ```
 
 ---
 
 # 📋 Workflow Details
 
-| Item            | Value                                 |
-| --------------- | ------------------------------------- |
-| Workflow        | React Native CI                       |
-| Job             | Quality Check & Firebase Distribution |
-| Runner          | `ubuntu-latest`                       |
-| Node.js         | `22`                                  |
-| Java            | `17 (Temurin)`                        |
-| Ruby            | `.ruby-version`                       |
-| Package Manager | Yarn                                  |
-| Build Tool      | Fastlane                              |
-| Distribution    | Firebase App Distribution             |
+| Item             | Value                                 |
+| ---------------- | ------------------------------------- |
+| Workflow         | React Native CI/CD                    |
+| Job              | Android Build & Firebase Distribution |
+| Runner           | `ubuntu-latest`                       |
+| Node.js          | `22`                                  |
+| Java             | `17 (Temurin)`                        |
+| Ruby             | `.ruby-version`                       |
+| Package Manager  | Yarn                                  |
+| Build Tool       | Fastlane                              |
+| Distribution     | Firebase App Distribution             |
+| Artifact Storage | GitHub Actions Artifact               |
+| Notifications    | Slack                                 |
 
 ---
 
@@ -145,7 +168,7 @@ Installs Ruby and Bundler required by Fastlane.
 
 ## Install JavaScript Dependencies
 
-Installs all project dependencies using the lockfile.
+Installs all project dependencies using the project's lockfile.
 
 ---
 
@@ -161,56 +184,172 @@ Runs the TypeScript compiler to detect type errors without generating output fil
 
 ---
 
+## ESLint
+
+Validates the codebase using the project's configured lint rules.
+
+---
+
 ## Prettier Check
 
-Ensures the repository follows the configured formatting rules.
+Ensures every file follows the configured formatting rules.
+
+---
+
+## Generate Release Notes
+
+Automatically generates release notes using information from the Pull Request.
+
+Generated information includes:
+
+- Release Date
+- Android Version
+- Branch Name
+- Developer
+- Pull Request Title
+- Pull Request Description
+
+These release notes are attached to every Firebase App Distribution release.
 
 ---
 
 ## Create Firebase Service Account
 
-Recreates the Firebase Service Account JSON file from the encrypted GitHub repository secret (`FIREBASE_SERVICE_ACCOUNT`).
+Recreates the Firebase Service Account JSON file from the encrypted GitHub Secret.
 
-This allows Fastlane to authenticate securely without storing credentials in the repository.
+Secret used:
+
+```text
+FIREBASE_SERVICE_ACCOUNT
+```
+
+No Firebase credentials are stored in the repository.
+
+---
+
+## Automatic Android Versioning
+
+The workflow automatically injects a unique Android `versionCode` before building the application.
+
+The version code is generated using the GitHub Actions workflow run number.
+
+Example:
+
+| Workflow Run | Android Version |
+| ------------ | --------------- |
+| #15          | 1.0.0 (15)      |
+| #16          | 1.0.0 (16)      |
+| #17          | 1.0.0 (17)      |
+
+Only the `VERSION_NAME` is maintained manually inside:
+
+```text
+android/version.properties
+```
+
+This approach guarantees:
+
+- Every Firebase release has a unique version.
+- No duplicate Android version codes.
+- No automatic Git commits.
+- Local development remains unchanged.
 
 ---
 
 ## Fastlane Android Development Workflow
 
-Executes:
+The workflow executes:
 
 ```bash
 bundle exec fastlane android dev
 ```
 
-The `dev` lane performs the following tasks:
+The `dev` lane performs:
 
-1. Clean Android project
+1. Clean Android Project
 2. Run ESLint
 3. Build Release APK
-4. Upload the Release APK to Firebase App Distribution
+4. Upload Release APK to Firebase App Distribution
 
 ---
 
-# 🔐 Required GitHub Secret
+## Firebase App Distribution
 
-| Secret                     | Description                                                                                    |
-| -------------------------- | ---------------------------------------------------------------------------------------------- |
-| `FIREBASE_SERVICE_ACCOUNT` | Firebase Service Account JSON used by Fastlane to authenticate with Firebase App Distribution. |
+Every successful workflow automatically uploads the generated Release APK to Firebase App Distribution.
+
+The uploaded build contains:
+
+- Dynamic Release Notes
+- Automatically generated Android Version Code
+- Release APK
+- QA Tester Distribution
+
+---
+
+## GitHub Actions Artifacts
+
+Every successful workflow uploads the generated Release APK as a GitHub Actions Artifact.
+
+Artifacts are retained for 30 days and can be downloaded directly from the completed workflow.
+
+This provides a secondary download source in addition to Firebase App Distribution.
+
+---
+
+## Slack Notifications
+
+The workflow automatically sends notifications to Slack.
+
+### Successful Build
+
+Includes:
+
+- Android Version
+- Developer
+- Branch
+- Pull Request Title
+- Pull Request Description
+- GitHub Workflow Link
+
+### Failed Build
+
+Includes:
+
+- Repository
+- Branch
+- Developer
+- Pull Request Title
+- GitHub Workflow Link
+
+This enables the development and QA teams to monitor every build without opening GitHub Actions.
+
+---
+
+# 🔐 Required GitHub Secrets
+
+| Secret                     | Description                                             |
+| -------------------------- | ------------------------------------------------------- |
+| `FIREBASE_SERVICE_ACCOUNT` | Firebase Service Account JSON used by Fastlane          |
+| `SLACK_WEBHOOK_URL`        | Slack Incoming Webhook URL used for build notifications |
 
 ---
 
 # 📌 Purpose
 
-This workflow ensures that every Pull Request:
+This workflow provides a complete Android CI/CD pipeline for React Native projects.
 
-- Uses the correct development environment.
-- Passes TypeScript validation.
-- Follows the project's formatting standards.
-- Successfully builds an Android Release APK.
-- Automatically distributes the latest build to Firebase App Distribution for testing.
+For every Pull Request, it automatically:
 
-By combining GitHub Actions with Fastlane, the repository provides a reliable, repeatable, and fully automated mobile CI/CD workflow.
+- Validates the project.
+- Runs TypeScript, ESLint, and Prettier checks.
+- Generates dynamic release notes.
+- Automatically generates a unique Android version code.
+- Builds a Release APK.
+- Uploads the APK to Firebase App Distribution.
+- Stores the APK as a GitHub Actions Artifact.
+- Sends Slack notifications to the development team.
+
+By combining GitHub Actions, Fastlane, Firebase App Distribution, and Slack, the project delivers a reliable, repeatable, scalable, and production-ready mobile CI/CD workflow.
 
 ---
 
@@ -219,10 +358,11 @@ By combining GitHub Actions with Fastlane, the repository provides a reliable, r
 - GitHub Actions
 - Fastlane
 - Firebase App Distribution
+- Slack Incoming Webhooks
 - Ruby
 - Bundler
-- Node.js
-- Java 17
+- Node.js 22
+- Java 17 (Temurin)
 - Yarn
 - TypeScript
 - ESLint

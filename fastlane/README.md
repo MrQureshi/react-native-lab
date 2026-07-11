@@ -1,10 +1,21 @@
-## 🚀 Fastlane Documentation
+# 🚀 Fastlane Documentation
 
-This project uses **Fastlane** to automate Android and iOS development workflows, including local development, Release builds, Firebase App Distribution, and simulator automation.
+This project uses **Fastlane** together with **GitHub Actions** to provide a production-ready mobile CI/CD pipeline for React Native applications.
+
+The automation includes:
+
+- Android Development & Release Builds
+- iOS Development Automation
+- Firebase App Distribution
+- Google Cloud Authentication
+- Automatic Android Versioning
+- Dynamic Release Notes
+- Slack Notifications
+- GitHub Actions Integration
 
 ---
 
-# Installation
+# 📦 Installation
 
 Make sure you have the latest version of the Xcode Command Line Tools installed:
 
@@ -12,7 +23,7 @@ Make sure you have the latest version of the Xcode Command Line Tools installed:
 xcode-select --install
 ```
 
-Install project dependencies:
+Install the project dependencies:
 
 ```sh
 bundle install
@@ -24,15 +35,15 @@ Run all Fastlane commands from the project root:
 bundle exec fastlane <platform> <lane>
 ```
 
-For Fastlane installation instructions, visit:
+For Fastlane installation instructions:
 
 https://docs.fastlane.tools
 
 ---
 
-# Available Actions
+# 🤖 Available Lanes
 
-# 🤖 Android
+# Android
 
 ## android clean
 
@@ -120,10 +131,10 @@ Runs the complete Android development workflow.
 
 Workflow:
 
-- Clean Android project
-- Run ESLint
-- Build Release APK
-- Upload Release APK to Firebase App Distribution
+1. Clean Android Project
+2. Run ESLint
+3. Build Release APK
+4. Upload Release APK to Firebase App Distribution
 
 ```sh
 bundle exec fastlane android dev
@@ -171,7 +182,7 @@ Boot the default iOS Simulator.
 bundle exec fastlane ios boot_simulator
 ```
 
-You can also launch a specific simulator:
+Launch a specific simulator:
 
 ```sh
 bundle exec fastlane ios boot_simulator device:"iPhone 15 Pro"
@@ -205,12 +216,12 @@ Runs the complete iOS development workflow.
 
 Workflow:
 
-- Clean Derived Data
-- Run ESLint
-- Build Debug Application
-- Boot iOS Simulator
-- Install Application
-- Launch Application
+1. Clean Derived Data
+2. Run ESLint
+3. Build Debug Application
+4. Boot iOS Simulator
+5. Install Application
+6. Launch Application
 
 ```sh
 bundle exec fastlane ios dev
@@ -218,19 +229,19 @@ bundle exec fastlane ios dev
 
 ---
 
----
-
 # ☁️ Google Cloud & Firebase Setup
 
 Before using Firebase App Distribution with Fastlane, complete the following one-time setup.
 
+---
+
 ## Step 1 – Create a Firebase Project
 
-1. Open the Firebase Console.
-2. Create a new Firebase project.
+1. Open Firebase Console.
+2. Create a Firebase project.
 3. Register your Android application.
-4. Download the `google-services.json` file.
-5. Place it in:
+4. Download `google-services.json`.
+5. Copy it to:
 
 ```text
 android/app/google-services.json
@@ -240,34 +251,49 @@ android/app/google-services.json
 
 ## Step 2 – Enable Firebase App Distribution
 
-From the Firebase Console:
+From Firebase Console:
 
 1. Open your project.
 2. Navigate to **App Distribution**.
-3. Complete the App Distribution setup.
+3. Complete the setup.
 
 ---
 
 ## Step 3 – Create a Google Cloud Service Account
 
-1. Open the Google Cloud Console associated with your Firebase project.
-2. Navigate to:
+Navigate to:
 
 ```text
+Google Cloud Console
+      │
+      ▼
 IAM & Admin
-    └── Service Accounts
+      │
+      ▼
+Service Accounts
 ```
 
-3. Create a new Service Account (for example, `fastlane`).
-4. Grant the **Firebase App Distribution Admin** role.
-5. Generate a new **JSON Key**.
-6. Download the JSON credentials.
+Create a Service Account.
+
+Recommended name:
+
+```text
+fastlane
+```
+
+Grant the following role:
+
+```text
+Firebase App Distribution Admin
+```
+
+Generate a JSON Key and download it.
 
 ---
 
 ## Step 4 – Store the Credentials
 
-Rename the downloaded file to:
+Rename the downloaded file:
 
 ```text
 firebase-service-account.json
@@ -279,9 +305,9 @@ Store it locally:
 secrets/firebase-service-account.json
 ```
 
-> **Important:** Never commit this file to source control.
+Never commit this file.
 
-Add it to `.gitignore`:
+Ensure `.gitignore` contains:
 
 ```text
 secrets/
@@ -291,37 +317,112 @@ secrets/
 
 ## Step 5 – Configure Fastlane
 
-Update your `Fastfile` constants:
+Update the constants inside your Fastfile.
 
 ```ruby
 FIREBASE_CREDENTIALS = "secrets/firebase-service-account.json"
+
 FIREBASE_APP_ID = "<YOUR_FIREBASE_APP_ID>"
 ```
 
-The `FIREBASE_APP_ID` can be copied from the Firebase Console under **Project Settings → General**.
+The Firebase App ID can be found in:
+
+```text
+Firebase Console
+      │
+      ▼
+Project Settings
+      │
+      ▼
+General
+      │
+      ▼
+App ID
+```
 
 ---
 
 ## Step 6 – Configure GitHub Actions
 
-For cloud execution, add the following GitHub repository secret:
+Add the following GitHub Repository Secret:
 
 | Secret                     | Description                                 |
 | -------------------------- | ------------------------------------------- |
 | `FIREBASE_SERVICE_ACCOUNT` | Contents of `firebase-service-account.json` |
+| `SLACK_WEBHOOK_URL`        | Slack Incoming Webhook URL                  |
 
-During every GitHub Actions run, the workflow recreates the credential file before executing Fastlane. This ensures the credentials are never stored in the repository while still allowing secure authentication with Firebase App Distribution.
+During every GitHub Actions execution, the workflow recreates the credential file automatically.
+
+This allows secure authentication without storing credentials in the repository.
+
+---
+
+# 🔢 Automatic Android Versioning
+
+Android versioning is fully automated during CI/CD.
+
+Only the application version is maintained manually.
+
+File:
+
+```text
+android/version.properties
+```
+
+Example:
+
+```properties
+VERSION_NAME=1.0.0
+VERSION_CODE=1
+```
+
+During GitHub Actions:
+
+- `VERSION_NAME` is read from `version.properties`.
+- `VERSION_CODE` is automatically injected using the GitHub Actions workflow run number.
+
+Example:
+
+| GitHub Run | Android Version |
+| ---------- | --------------- |
+| #21        | 1.0.0 (21)      |
+| #22        | 1.0.0 (22)      |
+| #23        | 1.0.0 (23)      |
+
+Benefits:
+
+- Every Firebase build has a unique version.
+- No duplicate Android versions.
+- No Git commits required.
+- Local development continues to work normally.
+
+---
+
+# 📝 Dynamic Release Notes
+
+Every Firebase build includes automatically generated release notes.
+
+The release notes include:
+
+- Release Date
+- Android Version
+- Branch Name
+- Developer Name
+- Pull Request Title
+- Pull Request Description
+
+These notes are generated by GitHub Actions and supplied to Fastlane during Firebase App Distribution.
 
 ---
 
 # 🤖 GitHub Actions Integration
 
-The Android `dev` lane is executed automatically by the GitHub Actions CI/CD workflow on every Pull Request targeting:
+The Android `dev` lane executes automatically on every Pull Request targeting:
 
 - `develop`
 - `main`
 
-Workflow:
+Pipeline:
 
 ```text
 Pull Request
@@ -330,21 +431,99 @@ Pull Request
 GitHub Actions
       │
       ▼
+Quality Checks
+      │
+      ├── TypeScript
+      ├── ESLint
+      └── Prettier
+      │
+      ▼
+Generate Release Notes
+      │
+      ▼
+Inject Android Version Code
+      │
+      ▼
 Fastlane Android Dev
       │
       ├── Clean
       ├── ESLint
       ├── Build Release APK
       └── Firebase App Distribution
+      │
+      ▼
+Upload APK Artifact
+      │
+      ▼
+Slack Notification
 ```
 
-This provides automatic validation, Release APK generation, and Firebase distribution without requiring any manual intervention.
+This provides fully automated validation, build generation, distribution, and team notifications.
 
 ---
 
-This README is automatically generated by Fastlane and may be regenerated whenever Fastlane documentation is updated.
+# 💬 Slack Notifications
 
-More information:
+The CI/CD workflow automatically sends Slack notifications.
 
-- https://fastlane.tools
-- https://docs.fastlane.tools
+## Successful Build
+
+Includes:
+
+- Android Version
+- Developer
+- Branch
+- Pull Request Title
+- Pull Request Description
+- GitHub Workflow Link
+
+---
+
+## Failed Build
+
+Includes:
+
+- Repository
+- Branch
+- Developer
+- Pull Request Title
+- GitHub Workflow Link
+
+This keeps developers and QA informed without manually checking GitHub Actions.
+
+---
+
+# 📦 GitHub Actions Artifacts
+
+Every successful workflow uploads the generated Release APK as a GitHub Actions Artifact.
+
+Benefits:
+
+- Secondary APK download location
+- Build history
+- Easy access for developers
+- Easy access for QA
+
+Artifacts are retained according to the GitHub Actions retention policy.
+
+---
+
+# 📚 Additional Documentation
+
+Useful resources:
+
+- Fastlane Documentation
+  https://docs.fastlane.tools
+
+- Firebase App Distribution
+  https://firebase.google.com/docs/app-distribution
+
+- GitHub Actions Documentation
+  https://docs.github.com/actions
+
+- Google Cloud Service Accounts
+  https://cloud.google.com/iam/docs/service-accounts
+
+---
+
+This project demonstrates a production-ready mobile DevOps pipeline by combining Fastlane, GitHub Actions, Firebase App Distribution, Google Cloud, and Slack to automate Android build, distribution, and team communication.

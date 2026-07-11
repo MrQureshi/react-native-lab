@@ -20,7 +20,7 @@ on:
       - develop
 
 jobs:
-  ci:
+  ci-cd:
     runs-on: ubuntu-latest
 
     steps:
@@ -71,7 +71,7 @@ jobs:
           mkdir -p artifacts
 
           VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
-          VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
+          VERSION_CODE=${{ github.run_number }}
 
           cat > artifacts/release-notes.md <<EOF
           🚀 React Native Lab
@@ -105,8 +105,97 @@ jobs:
           mkdir -p secrets
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > secrets/firebase-service-account.json
 
+      - name: Set Android Version Code
+        run: |
+          echo "VERSION_CODE=${{ github.run_number }}" >> $GITHUB_ENV
+
       - name: Run Fastlane Android Development Workflow
         run: bundle exec fastlane android dev
+
+      - name: Notify Slack
+        if: success()
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
+          VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
+
+          run: |
+          echo "Artifact URL:"
+          echo "${{ steps.upload_apk.outputs.artifact-url }}"
+
+          MESSAGE="🚀 React Native Lab
+
+          📦 Version: ${VERSION_NAME} (${VERSION_CODE})
+
+          🌿 Branch: ${{ github.head_ref }}
+
+          👤 Developer: ${{ github.actor }}
+
+          📌 PR:
+          ${{ github.event.pull_request.title }}
+
+          📥 APK Download
+          ${ARTIFACT_URL}
+
+          ${{ github.event.pull_request.body }}"
+
+          jq -n \
+            --arg text "$MESSAGE" \
+            '{text:$text}' > payload.json
+
+          curl \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data @payload.json \
+            "$SLACK_WEBHOOK_URL"
+      - name: List Generated APKs
+        if: success()
+        run: |
+          echo "Generated APKs:"
+          find android -type f -name "*.apk"
+
+      - name: Upload Release APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-Release-${{ github.run_number }}
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Notify Slack (Failure)
+        if: failure()
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          MESSAGE="🚨 CI/CD Pipeline Failed
+
+          ❌ Repository: ${{ github.repository }}
+
+          🌿 Branch: ${{ github.head_ref }}
+
+          👤 Developer: ${{ github.actor }}
+
+          📌 Pull Request:
+          ${{ github.event.pull_request.title }}
+
+          🔗 Workflow:
+          https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Please check the workflow logs."
+
+          jq -n \
+            --arg text "$MESSAGE" \
+            '{text:$text}' > payload.json
+
+          curl \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data @payload.json \
+            "$SLACK_WEBHOOK_URL"
 
       # - name: Run Tests
       # run: yarn test

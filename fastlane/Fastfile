@@ -76,31 +76,31 @@ platform :android do
     )
   end
 
-  desc "Increment Android version code"
-  lane :increment_version do
+  # desc "Increment Android version code"
+  # lane :increment_version do
 
-    version_file = File.join(FastlaneCore::FastlaneFolder.path, "..", "android", "version.properties")
-    version_file = File.expand_path(version_file)
-    properties = {}
+  #   version_file = File.join(FastlaneCore::FastlaneFolder.path, "..", "android", "version.properties")
+  #   version_file = File.expand_path(version_file)
+  #   properties = {}
 
-    File.readlines(version_file).each do |line|
-      key, value = line.strip.split("=")
-      properties[key] = value
-    end
+  #   File.readlines(version_file).each do |line|
+  #     key, value = line.strip.split("=")
+  #     properties[key] = value
+  #   end
 
-    current_version = properties["VERSION_CODE"].to_i
-    new_version = current_version + 1
+  #   current_version = properties["VERSION_CODE"].to_i
+  #   new_version = current_version + 1
 
-    properties["VERSION_CODE"] = new_version.to_s
+  #   properties["VERSION_CODE"] = new_version.to_s
 
-    File.open(version_file, "w") do |file|
-      properties.each do |key, value|
-        file.puts("#{key}=#{value}")
-      end
-    end
+  #   File.open(version_file, "w") do |file|
+  #     properties.each do |key, value|
+  #       file.puts("#{key}=#{value}")
+  #     end
+  #   end
 
-    UI.success("🚀 VERSION_CODE updated: #{current_version} → #{new_version}")
-  end
+  #   UI.success("🚀 VERSION_CODE updated: #{current_version} → #{new_version}")
+  # end
 
   desc "Upload Debug APK to Firebase App Distribution"
   lane :firebase do
@@ -136,7 +136,7 @@ platform :android do
   lane :dev do
     clean
     eslint
-    increment_version
+    # increment_version
     # test
     # build_debug
     # install_debug
