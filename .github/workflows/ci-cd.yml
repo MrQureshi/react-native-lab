@@ -105,12 +105,52 @@ jobs:
           mkdir -p secrets
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > secrets/firebase-service-account.json
 
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # temporary step:
+      - name: Verify Google Authentication
+        run: |
+          echo "Authenticated Accounts:"
+          gcloud auth list
+
+          echo ""
+          echo "Project:"
+          gcloud config get-value project
+
       - name: Set Android Version Code
         run: |
           echo "VERSION_CODE=${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Run Fastlane Android Development Workflow
         run: bundle exec fastlane android dev
+
+      - name: List Generated APKs
+        if: success()
+        run: |
+          echo "Generated APKs:"
+          find android -type f -name "*.apk"
+
+      - name: Upload Release APK
+        id: upload_apk
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-Release-${{ github.run_number }}
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      # temporary step:
+      # - name: Debug Artifact URL
+      #   run: |
+      #     echo "Artifact URL:"
+      #     echo "${{ steps.upload_apk.outputs.artifact-url }}"
 
       - name: Notify Slack
         if: success()
@@ -121,9 +161,8 @@ jobs:
           VERSION_NAME=$(grep VERSION_NAME android/version.properties | cut -d'=' -f2)
           VERSION_CODE=$(grep VERSION_CODE android/version.properties | cut -d'=' -f2)
 
-          run: |
-          echo "Artifact URL:"
-          echo "${{ steps.upload_apk.outputs.artifact-url }}"
+          ARTIFACT_URL="${{ steps.upload_apk.outputs.artifact-url }}"
+
 
           MESSAGE="🚀 React Native Lab
 
@@ -150,20 +189,6 @@ jobs:
             -H "Content-Type: application/json" \
             --data @payload.json \
             "$SLACK_WEBHOOK_URL"
-      - name: List Generated APKs
-        if: success()
-        run: |
-          echo "Generated APKs:"
-          find android -type f -name "*.apk"
-
-      - name: Upload Release APK
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Android-Release-${{ github.run_number }}
-          path: android/app/build/outputs/apk/release/*.apk
-          if-no-files-found: error
-          retention-days: 30
 
       - name: Notify Slack (Failure)
         if: failure()

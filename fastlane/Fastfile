@@ -128,7 +128,7 @@ platform :android do
         android_artifact_path: RELEASE_APK_PATH,
         service_credentials_file: FIREBASE_CREDENTIALS,
         release_notes_file: "artifacts/release-notes.md",
-        groups: "qa"
+        groups: "qa",
       )
     end
 

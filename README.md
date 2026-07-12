@@ -4,15 +4,7 @@
 
 > 📖 **Each feature has its own dedicated README** that walks through the implementation, explains what's happening behind the scenes, highlights important concepts, and documents the learning journey—making it easier to understand what is actually going on inside each experiment.
 
-> 🚧 **Currently exploring CI/CD with Fastlane and GitHub Actions**, building automated quality checks, reusable workflows, release pipelines, and production-ready mobile DevOps practices for React Native development.
-
-> 🚀 **Implemented a production-ready Android CI/CD pipeline** powered by GitHub Actions, Fastlane, Firebase App Distribution, automatic Android versioning, dynamic release notes, secure Google Cloud authentication, and Slack notifications.
-
-> 📦 **Every successful Pull Request automatically validates code quality, builds a Release APK, uploads it to Firebase App Distribution, stores it as a GitHub Actions artifact, and notifies the development team through Slack.**
-
-> 🔄 **The release pipeline is fully automated**, generating unique Android build numbers, creating pull request–based release notes, enforcing code quality, and delivering builds to QA without any manual intervention.
-
-> 📈 This repository continues to evolve with modern DevOps practices, scalable architecture, reusable automation, and production-ready mobile engineering workflows.
+> 🚀 **React Native CI/CD & Mobile DevOps** Built a production-ready CI/CD pipeline for React Native using GitHub Actions, Fastlane, Firebase App Distribution, and Slack. The workflow automates code quality checks, Release APK generation, artifact storage, Android versioning, dynamic release notes, secure Google Cloud authentication, QA distribution, and team notifications. Designed with reusable workflows and modern DevOps practices, the pipeline enables reliable, scalable, and low-maintenance mobile release automation.
 
 ---
 
